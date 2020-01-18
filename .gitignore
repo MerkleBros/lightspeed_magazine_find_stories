@@ -1,3 +1,5 @@
 .vim
 venv
 *.p
+old-pickles
+log.txt
