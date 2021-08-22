@@ -36,7 +36,7 @@ def request_all_paginated_list_pages(base_url: str) -> list:
         time.sleep(5)
     return pages
 
-def get_all_issues_links(issues_pages: list):
+def find_all_issue_links(issues_pages: list):
     """Find all issue url strings in a list of issue html pages (BeautifulSoup objects)"""
     print(f"Finding all issue links")
 
@@ -63,13 +63,13 @@ def get_all_issues_links(issues_pages: list):
 
     return urls
 
-def request_and_find_and_save_issue_links():
+def request_and_find_and_save_issue_links(pickle_url: str):
     """Request, find, and save list of issue link url strings as a pickle"""
     print(f"Getting all issue list pages")
 
     base_url = "http://www.lightspeedmagazine.com/category/issues/page"
     pages = request_all_paginated_list_pages(base_url=base_url)
-    issue_links = get_all_issues_links(issues_pages=pages)
+    issue_links = find_all_issue_links(issues_pages=pages)
 
     print(f"Dumping {len(issue_links)} links to pickle issue_links")
 
@@ -96,7 +96,7 @@ def request_soup_page(url: str):
     soup = BeautifulSoup(request.content, 'html.parser')
     return soup
 
-def get_all_story_links_from_issue(issue: object):
+def find_all_story_links_from_issue(issue: object):
     """Return a list of all story url strings in an issue"""
     print(f"Getting all story links from issue")
 
@@ -140,7 +140,7 @@ def request_and_find_and_save_story_links_from_issues(issue_links: list, pickle_
             print(f"Loaded pickle {pickle_url} with {len(story_links)} story links")
 
         issue_page = request_soup_page(url=issue_link)
-        links = get_all_story_links_from_issue(issue=issue_page)
+        links = find_all_story_links_from_issue(issue=issue_page)
         story_links = story_links + links
 
         print(f"Found {len(story_links)} story links so far")
@@ -290,13 +290,14 @@ def main():
     stories.p is an object containing story content and metadata for all stories
     """
 
-    request_and_find_and_save_issue_links()
-    issue_links = load_from_pickle("issue_links.p")
-    request_and_find_and_save_story_links_from_issues( \
-        issue_links=issue_links, pickle_url="story_links.p")
-    story_links = load_from_pickle(url="story_links.p")
-    request_and_find_and_save_stories_from_story_links( \
-        story_links=story_links, pickle_url="stories.p")
+    # request_and_find_and_save_issue_links(pickle_url="issue_links.p")
+    # issue_links = load_from_pickle("issue_links.p")
+    # request_and_find_and_save_story_links_from_issues( \
+        # issue_links=issue_links, pickle_url="story_links.p")
+    # story_links = load_from_pickle(url="story_links.p")
+    # request_and_find_and_save_stories_from_story_links( \
+    #    story_links=story_links, pickle_url="stories.p")
+    print(load_from_pickle('failed_story_urls.p'))
 
 if __name__ == '__main__':
     main()
